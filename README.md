@@ -1,2 +1,3 @@
 # ProjetsTrisC
+/build/*
 *.exe
