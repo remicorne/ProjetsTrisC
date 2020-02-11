@@ -1,1 +1,2 @@
 # ProjetsTrisC
+*.exe
