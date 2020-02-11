@@ -8,7 +8,6 @@ void Tri_Insertion(int t[], int lg) // possibilité amélioration avec recherche
     int count = 0;
     while (k < lg)
     {
-        printf("%d", count++);
         j = k;
         temp = t[k];
         while (j > 0 && temp < t[j - 1])
@@ -18,6 +17,7 @@ void Tri_Insertion(int t[], int lg) // possibilité amélioration avec recherche
         }
         t[j] = temp;
         k++;
+        count++;
     }
 }
 
@@ -27,7 +27,6 @@ void Tri_Insertion_Dichotomie(int t[], int lg)
     int count = 0;
     while (k < lg)
     {
-        printf("%d", count++);
         j = k;
         temp = t[k];
         i = 0;
@@ -49,6 +48,7 @@ void Tri_Insertion_Dichotomie(int t[], int lg)
         }
         t[j] = temp;
         k++;
+        count++;
     }
 }
 
@@ -58,7 +58,6 @@ void Tri_Selection(int t[], int lg)
     int count = 0;
     while (k > 0)
     {
-        printf("%d", count++);
         j = k;
         i = k - 1;
         while (i >= 0)
@@ -73,6 +72,7 @@ void Tri_Selection(int t[], int lg)
         t[k] = t[j];
         t[j] = temp;
         k--;
+        count++;
     }
 }
 
@@ -82,7 +82,6 @@ void Tri_Bulles(int t[], int lg)
     int count = 0;
     while (k > 0)
     {
-        printf("%d", count++);
         i = 0;
         kp = 0;
         while (i < k)
@@ -97,6 +96,7 @@ void Tri_Bulles(int t[], int lg)
             i++;
         }
         k = kp;
+        count++;
     }
 }
 
@@ -106,7 +106,6 @@ void Tri_Shake(int t[], int lg)
     int count = 0;
     while (kmin != kmax)
     {
-        printf("%d", count++);
         i = kmin;
         kp = kmin;
         while (i < kmax)
@@ -136,6 +135,40 @@ void Tri_Shake(int t[], int lg)
             i--;
         }
         kmin = kp;
+        count++;
+    }
+}
+
+void Tri_Shell(int t[], int lg)
+{
+    int p = 1, k, j, it, temp;
+    int count = 0;
+    
+    while (p < lg)
+        p = 3 * p + 1;
+    p = (p - 1) / 3;
+
+    while (p >= 1)
+    {
+        it = 0;
+        while (it < p)
+        {
+            k = p + it;
+            while (k < lg)
+            {
+                j = k;
+                temp = t[k];
+                while (j >= p && temp < t[j - p])
+                {
+                    t[j] = t[j - p];
+                    j = j - p;
+                }
+                t[j] = temp;
+                k = k + p;
+            }
+            it++;
+        }
+        p = (p - 1) / 3;
     }
 }
 
@@ -148,12 +181,12 @@ int main()
 
     while (i < 20)
     {
-    t20[i++] = rand() % 20;
+        t20[i++] = rand() % 20;
         printf("%d ",t20[i - 1]);
     }
 
     printf("\n");
-    Tri_Shake(t20, 20);
+    Tri_Shell(t20, 20);
 
     i = 0;
     while (i < 20)
