@@ -2,11 +2,10 @@
 #include <stdlib.h>
 #include <time.h>
 
-void Tri_Insertion(int t[], int lg) // possibilité amélioration avec recherche dicho sur la partie triée
+void Tri_Insertion(int t[], int lg) 
 {
-    int k = 1, j, temp;
-    int count = 0;
-    while (k < lg)
+    int k, j, temp;
+    for (k = 1; k < lg; k++)
     {
         j = k;
         temp = t[k];
@@ -16,16 +15,13 @@ void Tri_Insertion(int t[], int lg) // possibilité amélioration avec recherche
             j--;
         }
         t[j] = temp;
-        k++;
-        count++;
     }
 }
 
 void Tri_Insertion_Dichotomie(int t[], int lg) 
 {
-    int k = 1, j, i, temp;
-    int count = 0;
-    while (k < lg)
+    int k, j, i, temp;
+    for (k = 1; k < lg; k++)
     {
         j = k;
         temp = t[k];
@@ -40,51 +36,40 @@ void Tri_Insertion_Dichotomie(int t[], int lg)
             if (temp < t[j - 1])
                 j = (i + j) / 2;
         }
-        i = k;
-        while (i > j)
+        for (i = k; i > j; i--)
         {
             t[i] = t[i - 1];
-            i--;
         }
         t[j] = temp;
-        k++;
-        count++;
     }
 }
 
 void Tri_Selection(int t[], int lg)
 {
-    int k = lg - 1, i, j, temp;
-    int count = 0;
-    while (k > 0)
+    int k, i, j, temp;
+    for (k = lg - 1; k > 0; k--)
     {
         j = k;
-        i = k - 1;
-        while (i >= 0)
+        for (i = j - 1; i >= 0; i--)
         {
             if (t[i] > t[j])
             {
                 j = i;
             }
-            i--;
         }
         temp = t[k];
         t[k] = t[j];
         t[j] = temp;
-        k--;
-        count++;
     }
 }
 
 void Tri_Bulles(int t[], int lg)
 {
     int k = lg - 1, kp, i, temp;
-    int count = 0;
     while (k > 0)
     {
-        i = 0;
         kp = 0;
-        while (i < k)
+        for (i = 0; i < k; i++)
         {
             if (t[i] > t[i + 1])
             {
@@ -93,22 +78,18 @@ void Tri_Bulles(int t[], int lg)
                 t[i + 1] = temp;
                 kp = i + 1;
             }
-            i++;
         }
         k = kp;
-        count++;
     }
 }
 
 void Tri_Shake(int t[], int lg)
 {
     int kmax = lg - 1, kmin = 0, kp, i, temp;
-    int count = 0;
     while (kmin != kmax)
     {
-        i = kmin;
         kp = kmin;
-        while (i < kmax)
+        for (i = kmin; i < kmax; i++)
         {
             if (t[i] > t[i + 1])
             {
@@ -117,13 +98,10 @@ void Tri_Shake(int t[], int lg)
                 t[i + 1] = temp;
                 kp = i + 1;
             }
-            i++;
         }
         kmax = kp;
 
-        i = kmax;
-        kp = kmax;
-        while (i > kmin)
+        for (i = kmax; i > kmin; i--)
         {
             if (t[i] < t[i - 1])
             {
@@ -132,47 +110,48 @@ void Tri_Shake(int t[], int lg)
                 t[i - 1] = temp;
                 kp = i - 1;
             }
-            i--;
         }
         kmin = kp;
-        count++;
     }
 }
 
 void Tri_Shell(int t[], int lg)
 {
-    int p = 1, k, j, it, temp;
+    int pas, k, j, it, temp;
     int count = 0;
     
-    while (p < lg)
-        p = 3 * p + 1;
-    p = (p - 1) / 3;
+    for (pas = 1; pas < lg; pas = 3 * pas + 1);
+    
+    pas = (pas - 1) / 3;
 
-    while (p >= 1)
+    for (pas; pas >= 1; pas = (pas - 1) / 3)
     {
         it = 0;
-        while (it < p)
+        while (it < pas && pas + it < lg)
         {
-            k = p + it;
-            while (k < lg)
+            for (k = pas + it; k < lg; k = k + pas)
             {
                 j = k;
                 temp = t[k];
-                while (j >= p && temp < t[j - p])
+                while (j - pas >= 0 && temp < t[j - pas])
                 {
-                    t[j] = t[j - p];
-                    j = j - p;
+                    t[j] = t[j - pas];
+                    j = j - pas;
                 }
                 t[j] = temp;
-                k = k + p;
             }
             it++;
         }
-        p = (p - 1) / 3;
+        pas = (pas - 1) / 3;
     }
 }
 
-int main()
+void Tri_Shell(int t[], int lg)
+{
+    
+}
+
+int main() // Changer les while en for la ou cest logique
 {
     int t20[500], i;
 
@@ -186,7 +165,7 @@ int main()
     }
 
     printf("\n");
-    Tri_Shell(t20, 20);
+    Tri_Heap(t20, 20);
 
     i = 0;
     while (i < 20)
