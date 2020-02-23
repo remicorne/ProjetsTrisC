@@ -146,9 +146,47 @@ void Tri_Shell(int t[], int lg)
     }
 }
 
-void Tri_Shell(int t[], int lg)
+void placer(int g, int d, int *T)
 {
-    
+    int i, j, x, place_trouvee;
+    x = T[g];
+    i = g;
+    j = 2 * g + 1;
+    place_trouvee = 0;
+
+    while ((j <= d) && !(place_trouvee))
+    {
+        if (j < d)
+            if (T[j + 1] > T[j])
+                j = j + 1;
+        if (x >= T[j])
+            place_trouvee = 1;
+        else
+        {
+            T[i] = T[j];
+            i = j; 
+            j = 2 * i + 1;
+        }
+    }
+    T[i] = x;
+}
+
+void Tri_Heap(int t[], int lg)
+{
+    int g, d = lg - 1, temp;
+
+    for (g = lg / 2 - 1; g > 0; g--) // on s'arrete avant de mettre le premier à sa place
+    {
+        placer(g, d, t);
+    }
+
+    for (d = lg - 1; d > 0; d--) // on part du principe que la manip demarre avec le premier mal placé
+    {
+        placer(0, d, t);
+        temp = t[0];
+        t[0] = t[d];
+        t[d] = temp;
+    }
 }
 
 int main() // Changer les while en for la ou cest logique
