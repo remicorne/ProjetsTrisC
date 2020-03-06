@@ -2,6 +2,14 @@
 #include <stdlib.h>
 #include <time.h>
 
+int triReussi(int t[], int lg)
+{
+    for (int i = 0; i + 1 < lg; i++)
+        if (t[i] > t[i + 1])
+            return 0;
+    return 1;
+}
+
 void Tri_Insertion(int t[], int lg) 
 {
     int k, j, temp;
@@ -189,7 +197,31 @@ void Tri_Heap(int t[], int lg)
     }
 }
 
-int main() // Changer les while en for la ou cest logique
+void Tri_Quick(int t[], int g, int d)
+{
+    int p = (t[g] + t[d]) / 2;
+    int k1 = g, k2 = d, temp;
+
+    while (k1 < k2) 
+    {
+        if (t[k1] > p && t[k2] <= p)
+        {
+            temp = t[k1];
+            t[k1] = t[k2];
+            t[k2] = temp;
+        }
+        while (k1 < d && t[k1] <= p)
+            k1++;
+        while (k2 > g && t[k2] > p)
+            k2--;
+    }
+    if (d - g < 2)
+        return;
+    Tri_Quick(t, g, k1 - 1);
+    Tri_Quick(t, k2 + 1, d);
+}
+
+int main()
 {
     int t20[500], i;
 
@@ -203,12 +235,13 @@ int main() // Changer les while en for la ou cest logique
     }
 
     printf("\n");
-    Tri_Heap(t20, 20);
+    Tri_Quick(t20, 0, 19);
 
     i = 0;
     while (i < 20)
     {
         printf("%d ",t20[i++]);
     }
+    printf("\n%d", triReussi(t20, 20));
 
 }
