@@ -2,8 +2,6 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "FonctionsTris.h"
-
 void Imprimer_Tableau(int t[], int lg)
 {
     for (int i = 0; i < lg; i++)

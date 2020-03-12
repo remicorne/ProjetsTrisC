@@ -19,5 +19,6 @@ void Tri_Heap(int t[], int lg);
 void Recursivite_Quick(int t[], int g, int d);
 void Tri_Quick(int t[], int lg);
 
+#include "FonctionsTris.c"
 
 #endif

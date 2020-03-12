@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <unistd.h>
 
-#include "FonctionsTris.c"
+#include "FonctionsTris.h"
 
 typedef void (*fPTR)(int t[], int lg);
 
@@ -16,21 +17,22 @@ typedef struct
 
 float Effectuer_Tri(int copie[], int lg, fPTR fonction)
 {
-    clock_t t1, t2;
-
-    t1 = clock();
+    struct timespec t1, t2;
+    
+    clock_gettime(CLOCK_REALTIME, &t1);
     fonction(copie, lg);
-    t2 = clock();
+    clock_gettime(CLOCK_REALTIME, &t2);
+    
+    if (t2.tv_nsec < t1.tv_nsec) t2.tv_nsec = t2.tv_nsec + 1000000000;
 
     if (Tri_Reussi(copie, lg))
-        return (float)(t2 - t1) / CLOCKS_PER_SEC; 
+        return (float)(t2.tv_nsec - t1.tv_nsec) / 1000000000; 
 }
 
 int main()
 {
     int t[TAILLEMAX], copie[TAILLEMAX], lg, tailles[] = {500, 1000, 10000};
     RESULTAT resultats[8];
-    clock_t t1, t2;
 
     resultats[0].nom = "Tri par insertion";
     resultats[0].cout = "0(n^2)";
@@ -88,12 +90,9 @@ int main()
         }
     }
 
-    printf("|%22s |%12s | %19s             |  %30s  |\n", "", "", "trié", "désordonné (moyenne pour 10)");
-    printf("|%22s |%12s |", "", "");
-    for (int desord = 0; desord < 2; desord++)
-                for (int taille = 0; taille < 3; taille++)
-                    printf(" %6d   |", tailles[taille]);
-    printf("\n|_______________________|_____________|__________|__________|__________|__________|__________|__________|\n");
+    printf("|                       |             |                   trié                  |       désordonné (moyenne pour 10)      |\n");
+    printf("|                       |             |     500     |     1000    |    10000    |     500     |     1000    |    10000    |\n");
+    printf("|_______________________|_____________|_____________|_____________|_____________|_____________|_____________|_____________|\n");
 
     for (int tri = 0; tri < 8; tri++)
     {
@@ -101,7 +100,7 @@ int main()
         for (int desord = 0; desord < 2; desord++)
         {
             for (int taille = 0; taille < 3; taille++)
-                printf(" %8f |", resultats[tri].temps[desord][taille]);
+                printf(" %.9f |", resultats[tri].temps[desord][taille]);
         }
         printf("\n");
     }
