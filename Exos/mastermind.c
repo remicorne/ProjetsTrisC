@@ -9,15 +9,9 @@ typedef struct
     int rouge, blanc;
 } REPONSE;
 
-typedef struct
-{
-    int couleur;
-    int position;
-} BOULE;
-
 typedef struct 
 {
-    BOULE boule[4];
+    int proposition[4];
     REPONSE reponse;
 } TENTATIVE;
 
@@ -42,7 +36,7 @@ int reponseTrouveeTableau(TENTATIVE tentative)
 {
     int i;
     for (i = 0; i < 4; i++)
-        if (tentative.boule[i].couleur != CODE[tentative.boule[i].position])
+        if (tentative.propostition[i] != CODE[i])
             break;
     return i == 4;
 }
@@ -57,7 +51,7 @@ void evaluationTentative(TENTATIVE tentativeCourante)
     int t[4];
     
     for (int i = 0; i < 4; i++)
-        t[tentativeCourante.boule[i].position] = tentativeCourante.boule[i].couleur;
+        t[tentativeCourante.propostition[i].position] = tentativeCourante.propostition[i].couleur;
     
     for (int i = 0; i < 4; i++)
         printf("%d", t[i]);
@@ -70,15 +64,32 @@ void evaluationTentative(TENTATIVE tentativeCourante)
     scanf("%d", tentativeCourante.reponse.blanc);
 }
 
-void nouvelleTentative(TENTATIVE *tentativeCourante, TENTATIVE *tentativePrecedente)
+void incrementer(TENTATIVE nouvelleTentative, int numTentative, int nbAIncrementer)
 {
-    int i;
+    int i = 0;
+    while (nbAIncrementer > 0)
+    {
+        if (nouvelleTentative.proposition[i] == numTentative - 1)
+            nouvelleTentative.proposition[i] = numTentative;
+            nbAIncrementer--;
+    }
+}
+
+
+
+void nouvelleTentative(TENTATIVE tentativeCourante, TENTATIVE tentativePrecedente)
+{
+    int i, trouvees, malPlacees, bienPlacees;
 
     TENTATIVE nouvelleTentative;
 
-    for (i = tentativeCourante->reponse.blanc + tentativeCourante->reponse.rouge; i < 4; i++)
-        nouvelleTentative.boule[i]
+    malPlacees = tentativeCourante.reponse.blanc - tentativePrecedente.reponse.blanc;
+    bienPlacees = tentativeCourante.reponse.rouge - tentativePrecedente.reponse.rouge;
+    trouvees = tentativeCourante.reponse.blanc + tentativeCourante.reponse.rouge - (tentativePrecedente.reponse.blanc + tentativePrecedente.reponse.rouge);
 
+    if (!trouvees)
+        
+        
     tentativePrecedente = tentativeCourante;
     tentativeCourante = &nouvelleTentative;
 }

@@ -6,60 +6,60 @@
 #define MAX 1000
 
 typedef int T;
-typedef struct 
+
+typedef struct maillon
 {
-    T tab[MAX];
-    int d, f, nb; //pas besoin de stocker le dernier en fait
-} FILE_T;
+    T info;
+    struct maillon *suivant;
+} MAILLON;
+
+typedef MAILLON *PTR;
+
+typedef PTR FILE_T;
+
+PTR NM(T info, PTR suivant)
+{
+    PTR maillon = malloc(sizeof(MAILLON)); //checker "invalid conversion from 'void*' to ..."
+    assert(maillon != NULL);
+    maillon->info = info;
+    maillon->suivant = suivant;
+    return maillon;
+}
 
 void creer_file(FILE_T *k)
 {
-    k->nb = 0;
-    k->d = 0;
-    k->f = k->d - 1;
+    k = NULL;
 }
 
 int file_vide(FILE_T k)
 {
-    return k.nb == 0;
+    return k == NULL;
 }
 
-int enfiler(T e, FILE_T *k)
+int enfiler(T e, FILE_T *k) 
 {
-    if (k->nb == MAX) 
-        return 0; 
-    
-    k->f = (k->f + 1) % (MAX);
-    k->tab[k->f] = e;
-    k->nb++;
-    return 1;
-}
-
-int enfilerbis(T e, FILE_T k)
-{
-    if (k.nb == MAX) 
-        return 0; 
-    
-    k.f = (k.f + 1) % (MAX);
-    k.tab[k.f] = e;
-    k.nb++;
-    return 1;
+    if (!file_vide(*k))
+    {
+        *k = NM(e, *k);
+        return 1;   
+    }
 }
 
 int defiler(FILE_T *k)
 {
-    if (file_vide(*k))
-        return 0;
-    
-    k->d = (k->d + 1) % (MAX);
-    k->nb--;
-    return 1;
+    PTR p, c = *k;
+    while (c->suivant != NULL)
+    {
+        p = c;
+        c = c->suivant;
+    }
+    p->suivant = NULL;
+    free(c);
 }
 
 T premier(FILE_T k)
 {
     assert(!file_vide(k));
-    return k.tab[k.d];
 }
 
 int main()
@@ -67,13 +67,12 @@ int main()
     FILE_T f;
     creer_file(&f);
     T e = 10;
-
-    printf("%d\n", enfiler(e, &f));
-    printf("%d" , f.tab[f.d]);
-
-    printf("%d\n", enfilerbis(e, f));
-    printf("%d" , f.tab[f.d]);
-
+    
+    enfiler(e, &f);
+    e = 9;
+    enfiler(e, &f);
+    defiler(&f);
+    printf("%d", f->info);
     // int reponse;
 
     // while (1)
